@@ -1,0 +1,38 @@
+const mongoose = require("mongoose");
+const express = require("express");
+const jwt = require("jsonwebtoken");
+let h = require('./helpers')
+const Driver = require("../../models/driver");
+const Shipper = require("../../models/shipper");
+const secret = require("../../config/auth.json").secret;
+const router = express.Router();
+
+router.post("/api/login", (req, res) => {
+  let { isDriver, email, password } = req.body;
+  let userType = h.defineType(isDriver);
+
+  findUser(userType, email, password)
+    .then(user => {
+      if (!user) {
+        throw new Error();
+      }
+      console.log(user);
+      let jwt_token = jwt.sign(JSON.stringify(user), secret);
+      console.log(jwt_token);
+      res.json({ jwt_token});
+    })
+    .catch(e => {
+      console.log("User is not found");
+      res.status(401).json({ status: e.message });
+    });
+});
+
+function findUser(userType, email, password) {
+  console.log(email);
+  console.log(password);
+  return userType.findOne({ email: email, password: password });
+}
+
+
+
+module.exports = router;
