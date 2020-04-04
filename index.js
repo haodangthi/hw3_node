@@ -24,7 +24,7 @@ mongoose.set('useFindAndModify', false);
 app.use(loginRouer);
 app.use(userRouter);
 app.use(truckRouter);
-
+app.use(loadRouter)
 app.listen(8081, () => console.log("started"));
 
 

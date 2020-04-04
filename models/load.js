@@ -2,20 +2,15 @@ const mongoose = require("mongoose");
 const Schema= mongoose.Schema
 
 const LoadSchema = new Schema({
-
-    dimention:{
+    payload:{
+        type:Number,
+        required:true
+    },
+    dimension:{
         type:Object,
         required:true
     },
     status:{
-        type:String,
-        required:true
-    },
-    created_by:{
-        type:String,
-        required:true
-    },
-    assigned_to:{
         type:String,
         required:true
     },
@@ -24,25 +19,13 @@ const LoadSchema = new Schema({
         required:true
     }
     ,
-    payload:{
-        type:Number,
+   
+    created_by:{
+        type:String,
         required:true
     },
-    
-    length:{
-        type:Number,
-        required:true
-    },
-    width:{
-        type:Number,
-        required:true
-    },
-    height:{
-        type:Number,
-        required:true
-    },
-    logs:{
-        type:Array,
+    assigned_to:{
+        type:String,
         required:true
     },
     message:{

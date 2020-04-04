@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Button } from "../components/Form";
+import { Button ,ProfileTitle} from "../components/Form";
 import { TrucksCard } from "./Trucks";
 
 export class UserPage extends React.Component {
@@ -240,7 +240,7 @@ export class UserPage extends React.Component {
                 <ProfileData data={this.state} />
               </div>
               <div className="card-action">
-                <Button btnName="Edit my profile" onClick={this.getUserInfo} />
+                <Button btnName="Change password" onClick={this.getUserInfo} />
 
                 <Button
                   btnName={this.state.btnToggleTrucks}
@@ -274,16 +274,7 @@ function Select(props) {
   );
 }
 
-function ProfileTitle(props) {
-  return (
-    <div className=" card-action profileTitle">
-      <h1>
-        <span className="profileTitle__name">{props.name}</span>
-        <span className="profileTitle__surname">{props.surname}</span>
-      </h1>
-    </div>
-  );
-}
+
 
 function ProfileData(props) {
   return (

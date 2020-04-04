@@ -12,20 +12,13 @@ function getUserID(token) {
 function userIsDriver(token) {
   let user = jwt.verify(token, secret);
   console.log(user._id);
+
   return user.isDriver;
 }
-function defineType(isDriver) {
-  let userType;
-  if (isDriver) {
-    userType = Driver;
-  } else {
-    userType = Shipper;
-  }
-  return userType;
-}
+const defineType = isDriver => (isDriver ? Driver : Shipper);
 
 module.exports = {
   getUserID: getUserID,
-  defineType:defineType,
-  userIsDriver:userIsDriver
+  defineType: defineType,
+  userIsDriver: userIsDriver
 };

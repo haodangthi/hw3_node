@@ -1,7 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
-const Driver = require("../../models/driver");
+
 const Load = require("../../models/load");
 const router = express.Router();
 let h = require("./helpers");
@@ -17,15 +17,13 @@ router.get("/api/loads/:token", (req, res) => {
 router.post("/api/loads", (req, res) => {
   let date = new Date();
   date = date.toLocaleDateString();
-  console.log(req.body.payload);
+  console.log(req.body.dimension);
   let shipperId = h.getUserID(req.body.token);
   saveToDB(
-    createTruck(
+    createLoad(
       shipperId,
-      req.body.width,
-      req.body.length,
-      req.body.heigth,
-      req.body.payload,
+      req.body.dimension,
+      +req.body.payload,
 
       date
     ),
@@ -50,15 +48,16 @@ router.delete("/api/loads/:loadId", (req, res) => {
   });
 });
 
-function createLoad(shipperID, width, length, heigth, payload, date) {
+function createLoad(shipperID, dimension, payload, date) {
+ 
   return new Load({
     payload: payload,
-    dimension: { width, length, heigth },
-    status: status,
+    dimension:dimension,
+    status: "new",
     state: "NEW",
     created_by: shipperID,
     assigned_to: "nobody",
-    message: "",
+    message: "created",
     date: date
   });
 }
@@ -73,7 +72,7 @@ function saveToDB(item, res) {
         truck
       });
     })
-    .catch(e => {
+    .catch(e => { 
       res.status(500).json({ status: e.message });
     });
 }

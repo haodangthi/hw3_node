@@ -26,7 +26,16 @@ function handleChangeEmail(event) {
 
 
 
-
+  function ProfileTitle(props) {
+    return (
+      <div className=" card-action profileTitle">
+        <h1>
+          <span className="profileTitle__name">{props.name}</span>
+          <span className="profileTitle__surname">{props.surname}</span>
+        </h1>
+      </div>
+    );
+  }
 
 
 
@@ -36,7 +45,7 @@ function handleChangeEmail(event) {
 function Button(props) {
     return (
       <button
-        className="btn waves-effect waves-light"
+        className="btn waves-effect light-blue lighten-3 black-text"
        type="submit"
         name="action"
         onClick={props.onClick}
@@ -93,4 +102,4 @@ function Button(props) {
     );
   }
   
-  export {handleChangeEmail,handleChangePassword,handleSwitch, Button, EmailInput,PasswordInput,Switch}
+  export {ProfileTitle,handleChangeEmail,handleChangePassword,handleSwitch, Button, EmailInput,PasswordInput,Switch}

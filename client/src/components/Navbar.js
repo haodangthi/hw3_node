@@ -1,12 +1,16 @@
 import React from "react";
 import { SignUp } from "../pages/Registration";
+import {useContext} from "react";
+import { UserContext } from "../hooks/UserContext"
 
 
-let isAuthentficated = () => (localStorage.getItem("token") ? true : false);
 export function Navbar() {
+  let isAuthentficated=useContext(UserContext)
+  
+  
   return (
     <nav>
-      <div className="nav-wrapper">
+      <div className="nav-wrapper  light-blue lighten-3">
         <a href="#" className="brand-logo">
           Uber
         </a>

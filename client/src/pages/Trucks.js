@@ -160,7 +160,7 @@ function TruckInfo(props) {
         <Info infoTitle="Truck Type:" infoDetail={props.info.truckType} />
         <Info infoTitle="Payload:" infoDetail={props.info.payload} />
         <Info infoTitle="Date of creation:" infoDetail={props.info.date} />
-        {/* <Dimension infoTitle="Dimension:" infoDetail={props.info.dimention} /> */}
+        <Dimension infoTitle="Dimension:" infoDetail={props.info.dimension} />
         <Button
           btnName={props.assignBtn}
           onClick={props.onClick.changeStatus}
