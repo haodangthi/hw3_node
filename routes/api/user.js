@@ -50,18 +50,21 @@ router.put("/api/users/:driverId", (req, res) => {
     .catch(e => console.log(e));
 });
 
-router.put("/api/users/:shipperId", (req, res) => {
-  Shipper.findByIdAndUpdate(req.params.shipperId, {
-    isAssigned: req.body.isAssigned,
-    assignedTruck: req.body.assignedTruck
-  })
-    .then(user => res.json({ status: "updated user", user }))
+router.put("/api/users/pass/:token", (req, res) => {
+  let isDriver = h.userIsDriver(req.params.token);
+  let userType = h.defineType(isDriver);
+  let userID = h.getUserID(req.params.token);
+  userType
+    .findByIdAndUpdate(userID, {
+      password: req.body.password
+    })
+    .then(user => res.json({ status: "user's password updated", user }))
     .catch(e => console.log(e));
 });
 
 router.delete("/api/users/:shipperId", (req, res) => {
   Shipper.findByIdAndDelete(req.params.shipperId)
-    .then(user => res.json({ status: "deleted user", user }))
+    .then(user => res.json({ status: "user deleted ", user }))
     .catch(e => console.log(e));
 });
 

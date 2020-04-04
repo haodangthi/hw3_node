@@ -48,7 +48,7 @@ export class Login extends React.Component {
   render() {
     return (
       <div className="row">
-        <form action="/api/login" method="POST" class="col s12" onSubmit={this.handleSubmit}>
+        <form class="col s12" onSubmit={this.handleSubmit}>
           <div className="col s12 m8">
             <div className="card">
               <div className="card-content ">

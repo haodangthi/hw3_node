@@ -3,10 +3,16 @@ import { Button, ProfileTitle } from "../components/Form";
 import { useContext } from "react";
 import { UserContext } from "../hooks/UserContext";
 import { Promise } from "mongoose";
+import { Load } from "./Loads";
 
 export function ShipperPage() {
   let token = useContext(UserContext);
-
+  const [currentPassword, setCurrPass] = useState("");
+  const [width, setWidth] = useState(0);
+  const [height, setHeight] = useState(0);
+  const [lenght, setLenght] = useState(0);
+  const [payload, setPayload] = useState(0);
+  const [loads, setLoads] = useState([]);
   const [user, setUser] = useState({});
 
   useEffect(() => {
@@ -15,16 +21,20 @@ export function ShipperPage() {
     });
   }, []);
 
-  const [width, setWidth] = useState(0);
-  const [height, setHeight] = useState(0);
-  const [lenght, setLenght] = useState(0);
-  const [payload, setPayload] = useState(0);
   useEffect(() => {
-    console.log(width);
-  }, [width]);
+    setCurrPass(user.password);
+  }, [user]);
 
   let createLoadFunc = () =>
     createLoad(+width, +lenght, +height, +payload, +token);
+
+  useEffect(() => {
+    viewCreatedLoads().then(res => {
+      console.log(res)
+    });
+  }, []);
+
+  const [passwordField, setField] = useState(false);
 
   return (
     <div>
@@ -38,11 +48,23 @@ export function ShipperPage() {
                 <ProfileData email={user.email} />
               </div>
               <div className="card-action">
-                <Button btnName="Change password" />
+                <Button
+                  btnName="Change password"
+                  onClick={() => {
+                    setField(!passwordField);
+                  }}
+                />
 
                 <Button btnName="View my loads" />
               </div>
-              <ChangePasswordForm />
+              {passwordField ? (
+                <ChangePasswordForm
+                  currentPass={currentPassword}
+                  token={token}
+                />
+              ) : (
+                ""
+              )}
               <CreateLoadForm
                 width={e => {
                   setWidth(e.target.value);
@@ -62,6 +84,7 @@ export function ShipperPage() {
           </div>
         </div>
       </div>
+      {loads}
     </div>
   );
 }
@@ -105,17 +128,24 @@ function createLoad(width, lenght, height, payload, token) {
   });
 }
 
-function viewCreatedLoads() {}
+function viewCreatedLoads() {
+  return new Promise((resolve, reject) => {
+    fetch("http://localhost:8081/api/loads/" + localStorage.getItem("token"))
+      .then(res => res.json())
+      .then(res => {
+        resolve(res.trucks);
+      })
+      .catch(e => {
+        console.log(e);
+        reject();
+      });
+  });
+}
 
 function LoadInput(props) {
   return (
     <div class="input-field col s8">
-      <input
-        id={props.id}
-        type="text"
-        //class="validate"
-        onChange={props.onChange}
-      />
+      <input id={props.id} type="text" onChange={props.onChange} />
       <label for={props.id}>{props.label}</label>
     </div>
   );
@@ -145,10 +175,86 @@ function CreateLoadForm(props) {
           </div>
         </div>
       </div>
+      <Load />
     </div>
   );
 }
 
+function ChangePasswordForm(props) {
+  let currentPass = props.currentPass;
+  console.log(currentPass);
+  const [oldPass, setOldPass] = useState("");
+  const [newPass, setNewPass] = useState("");
+  const [confirmPass, setConfirmPass] = useState("");
+  let checkOldPassword = () => (currentPass === oldPass ? true : false);
+  let confirmPassword = () => (newPass === confirmPass ? true : false);
+  let checkNewPassword = () =>
+    checkOldPassword() && confirmPassword() ? true : false;
+
+  let save = () =>
+    checkNewPassword()
+      ? changePassword(newPass, props.token)
+          .then(res => console.log(res))
+          .catch(e => console.log(e))
+      : console.log("error");
+
+  return (
+    <div className="row">
+      <div className="col s12 m6">
+        <div className="card ">
+          <div className="card-content">
+            <span className="card-title black-text">Change</span>
+            <div className="row">
+              <LoadInput
+                id="oldPass"
+                label="Old password"
+                onChange={e => setOldPass(e.target.value)}
+              />
+            </div>
+            <div className="row">
+              <LoadInput
+                id="newPass"
+                label="New password"
+                onChange={e => setNewPass(e.target.value)}
+              />
+            </div>
+            <div className="row">
+              <LoadInput
+                id="confirmPass"
+                label="Confirm password"
+                onChange={e => setConfirmPass(e.target.value)}
+              />
+            </div>
+            <div class="card-action">
+              <Button btnName="Save changes" onClick={save} />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function changePassword(password, token) {
+  console.log(password);
+  return new Promise((resolve, reject) => {
+    fetch("http://localhost:8081/api/users/pass/" + token, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json;charset=utf-8"
+      },
+      body: JSON.stringify({
+        token: localStorage.getItem("token"),
+        password: password
+      })
+    })
+      .then(res => res.json())
+      .then(res => {
+        resolve(res);
+      })
+      .catch(e => reject(e));
+  });
+}
 function ProfileData(props) {
   return (
     <div className="card-action">
@@ -163,31 +269,5 @@ function ProfileDataItem(props) {
     <h6>
       {props.dataTitle} <span className="data__container">{props.data} </span>
     </h6>
-  );
-}
-
-function ChangePasswordForm() {
-  return (
-    <div className="row">
-      <div className="col s12 m6">
-        <div className="card ">
-          <div className="card-content">
-            <span className="card-title black-text">Change</span>
-            <div className="row">
-              <LoadInput id="oldPass" label="Old password" />
-            </div>
-            <div className="row">
-              <LoadInput id="newPass" label="New password" />
-            </div>
-            <div className="row">
-              <LoadInput id="confirmPass" label="Confirm password" />
-            </div>
-            <div class="card-action">
-              <Button btnName="Save changes" />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
   );
 }

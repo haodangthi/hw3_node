@@ -12,7 +12,7 @@ router.post("/api/trucks", (req, res) => {
   let date = new Date();
   date = date.toLocaleDateString();
   console.log(req.body.payload);
-  let userID = h.getUserID(req.body.token);
+  let userID = h.getUserID(req.body.token); 
   saveToDB(
     createTruck(
       userID,
