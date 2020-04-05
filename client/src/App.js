@@ -16,7 +16,7 @@ function App() {
     setAuth(!!token)
   }, [token]);
 
-  const routes = useRoutes(isAuthentficated);
+  const routes = useRoutes(isAuthentficated,token);
   return (
     <UserContext.Provider value={isAuthentficated,token}>
       <Router>

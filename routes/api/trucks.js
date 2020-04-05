@@ -33,6 +33,21 @@ router.get("/api/trucks/:token", (req, res) => {
   );
 });
 
+
+
+
+router.get("/api/trucks",(req,res)=>{
+  Truck.find({}).then(trucks=>{
+    let filtered=trucks.filter(truck=>{
+     return truck.status==='ON LOAD'&& truck.assigned_to==="nobody" 
+    })
+    res.json(filtered)
+  })
+})
+
+
+
+
 router.delete("/api/trucks/:truckId", (req, res) => {
   Truck.findByIdAndDelete(req.params.truckId).then(truck => {
     let userId = truck.created_by;
@@ -45,10 +60,24 @@ router.delete("/api/trucks/:truckId", (req, res) => {
 router.put("/api/trucks/:truckId", (req, res) => {
   
   Truck.findByIdAndUpdate(req.params.truckId, {
-    status: req.body.status,
+    status: req.body.status
+    //assigned_to: req.body.assigned_to
+      }).then(user => res.json({ status: "ok", user }));
+});
+router.put("/api/trucks/assign/:truckId", (req, res) => {
+  
+  Truck.findByIdAndUpdate(req.params.truckId, {
+    
     assigned_to: req.body.assigned_to
       }).then(user => res.json({ status: "ok", user }));
 });
+
+
+
+
+
+
+
 
 function createTruck(driverID, type, payload, dimension, status, date) {
   return new Truck({

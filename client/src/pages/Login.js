@@ -1,6 +1,12 @@
 import React, { Component } from "react";
-import {handleChangeEmail,handleChangePassword,handleSwitch,Button,Switch,EmailInput,PasswordInput }from '../components/Form'
+import {EmailInput,PasswordInput }from '../components/Form'
+import {handleChangeEmail} from "../components/handlers/handleChangeEmail"
+import {handleChangePassword} from "../components/handlers/handleChangePassword"
+import {handleSwitch} from "../components/handlers/handleSwitch"
+import {Button} from "../components/Button"
+import {Switch} from "../components/Switch"
 
+let pf=require('./help/postFetch')
 
 export class Login extends React.Component {
   constructor(props) {
@@ -16,33 +22,34 @@ export class Login extends React.Component {
     this.handleSubmit=this.handleSubmit.bind(this)
   }
 
-
-  
-  
-
   handleSubmit(e){
     e.preventDefault();
-    console.log(
-        this.state.email,
-        this.state.password,
-        this.state.isDriver
-    )
-    fetch("http://localhost:8081/api/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json;charset=utf-8"
-        },
-        body: JSON.stringify({
-          isDriver: this.state.isDriver,
-          email: this.state.email,
-          password: this.state.password
-        })
-      })
-        .then(res => res.json())
-        .then(res => {
-          let token = res.jwt_token;
-          localStorage.setItem("token", token);
-        });
+    let url="http://localhost:8081/api/login"
+    let bodyData={
+      isDriver: this.state.isDriver,
+      email: this.state.email,
+      password: this.state.password
+    }
+    pf.postFetch(url,bodyData).then(res=>{
+      let token = res.jwt_token;
+         localStorage.setItem("token", token);
+    })
+    // fetch("http://localhost:8081/api/login", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json;charset=utf-8"
+    //     },
+    //     body: JSON.stringify({
+    //       isDriver: this.state.isDriver,
+    //       email: this.state.email,
+    //       password: this.state.password
+    //     })
+    //   })
+    //     .then(res => res.json())
+    //     .then(res => {
+    //       let token = res.jwt_token;
+    //       localStorage.setItem("token", token);
+    //     });
   }
 
   render() {

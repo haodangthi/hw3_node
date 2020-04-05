@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { Button ,ProfileTitle} from "../components/Form";
+import { ProfileTitle} from "../components/Form";
 import { TrucksCard } from "./Trucks";
+import {Button} from "../components/Button"
 
 export class UserPage extends React.Component {
   constructor(props) {
@@ -46,10 +47,14 @@ export class UserPage extends React.Component {
 
     //if we delete the assigned truck
     this.resetStatus=this.resetStatus.bind(this)
+
+
+    // this.getAssignedTrucks=getAssignedTrucks.bind(this)
   }
 
   componentDidMount() {
     this.getUserInfo();
+    
   }
 
   updateShownCards(id) {
@@ -295,7 +300,7 @@ const sprinter = {
   payload: 1700,
   dimension: {
     width: 300,
-    length: 250,
+    lenght: 250,
     height: 170
   }
 };
@@ -304,7 +309,7 @@ const smallStraight = {
   payload: 2500,
   dimension: {
     width: 500,
-    length: 250,
+    lenght: 250,
     height: 170
   }
 };
@@ -313,7 +318,7 @@ const largeStraight = {
   payload: 4000,
   dimension: {
     width: 700,
-    length: 350,
+    lenght: 350,
     height: 200
   }
 };

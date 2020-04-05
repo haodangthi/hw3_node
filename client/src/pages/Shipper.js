@@ -1,9 +1,16 @@
 import React, { Component, useState, useEffect } from "react";
-import { Button, ProfileTitle } from "../components/Form";
+import {ProfileTitle } from "../components/Form";
+import {Button} from "../components/Button"
 import { useContext } from "react";
 import { UserContext } from "../hooks/UserContext";
-import { Promise } from "mongoose";
+
 import { Load } from "./Loads";
+import { ChangePasswordForm } from "./Shipper/ChangePassword";
+import { ProfileData } from "./Shipper/ProfileData";
+import {CreateLoadForm} from "./Shipper/CreateLoadField"
+
+let gf = require("./help/getFetch");
+let cl=require('./Shipper/creatLoad')
 
 export function ShipperPage() {
   let token = useContext(UserContext);
@@ -14,10 +21,12 @@ export function ShipperPage() {
   const [payload, setPayload] = useState(0);
   const [loads, setLoads] = useState([]);
   const [user, setUser] = useState({});
+  const [passwordField, setField] = useState(false);
+  const [shownLoads, setShownLoads] = useState(false);
 
   useEffect(() => {
     getUserInfo(token).then(res => {
-      setUser(res);
+      setUser(res.user);
     });
   }, []);
 
@@ -26,15 +35,15 @@ export function ShipperPage() {
   }, [user]);
 
   let createLoadFunc = () =>
-    createLoad(+width, +lenght, +height, +payload, +token);
+    cl.createLoad(+width, +lenght, +height, +payload, +token);
 
-  useEffect(() => {
+  let viewLoads = () => {
     viewCreatedLoads().then(res => {
-      console.log(res)
+      let loads = res.trucks.map(e => <Load key={e._id} loadData={e} />);
+      setLoads(loads);
+      setShownLoads(!shownLoads);
     });
-  }, []);
-
-  const [passwordField, setField] = useState(false);
+  };
 
   return (
     <div>
@@ -55,7 +64,7 @@ export function ShipperPage() {
                   }}
                 />
 
-                <Button btnName="View my loads" />
+                <Button btnName="View my loads" onClick={viewLoads} />
               </div>
               {passwordField ? (
                 <ChangePasswordForm
@@ -84,190 +93,19 @@ export function ShipperPage() {
           </div>
         </div>
       </div>
-      {loads}
+      {shownLoads ? loads : ""}
     </div>
   );
 }
 
 function getUserInfo(token) {
-  return new Promise((resolve, reject) => {
-    fetch("http://localhost:8081/api/users/" + token)
-      .then(res => res.json())
-      .then(res => {
-        console.log(res.user);
-        resolve(res.user);
-      }) //
-      .catch(e => {
-        console.log(e);
-        reject();
-      });
-  });
+  let url = "http://localhost:8081/api/users/" + token;
+  return gf.getFetch(url);
 }
 
-function createLoad(width, lenght, height, payload, token) {
-  return new Promise((resolve, reject) => {
-    fetch("http://localhost:8081/api/loads", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8"
-      },
-      body: JSON.stringify({
-        token: localStorage.getItem("token"),
-        payload: payload,
-        dimension: { width, lenght, height }
-      })
-    })
-      .then(res => res.json())
-      .then(res => {
-        console.log(res);
-        resolve(res);
-      })
-      .catch(e => {
-        reject();
-      });
-  });
-}
 
 function viewCreatedLoads() {
-  return new Promise((resolve, reject) => {
-    fetch("http://localhost:8081/api/loads/" + localStorage.getItem("token"))
-      .then(res => res.json())
-      .then(res => {
-        resolve(res.trucks);
-      })
-      .catch(e => {
-        console.log(e);
-        reject();
-      });
-  });
+  let url = "http://localhost:8081/api/loads/" + localStorage.getItem("token");
+  return gf.getFetch(url);
 }
 
-function LoadInput(props) {
-  return (
-    <div class="input-field col s8">
-      <input id={props.id} type="text" onChange={props.onChange} />
-      <label for={props.id}>{props.label}</label>
-    </div>
-  );
-}
-
-function CreateLoadForm(props) {
-  return (
-    <div className="row">
-      <div className="col s12 m6">
-        <div className="card ">
-          <div className="card-content black-text">
-            <h4>Create a Load</h4>
-
-            <div className="row">
-              <LoadInput id="width" label="Width" onChange={props.width} />
-              <LoadInput id="length" label="Length" onChange={props.lenght} />
-              <LoadInput id="height" label="Height" onChange={props.height} />
-              <LoadInput
-                id="payload"
-                label="Payload"
-                onChange={props.payload}
-              />
-            </div>
-          </div>
-          <div className="card-action">
-            <Button btnName="Create a load" onClick={props.onClick} />
-          </div>
-        </div>
-      </div>
-      <Load />
-    </div>
-  );
-}
-
-function ChangePasswordForm(props) {
-  let currentPass = props.currentPass;
-  console.log(currentPass);
-  const [oldPass, setOldPass] = useState("");
-  const [newPass, setNewPass] = useState("");
-  const [confirmPass, setConfirmPass] = useState("");
-  let checkOldPassword = () => (currentPass === oldPass ? true : false);
-  let confirmPassword = () => (newPass === confirmPass ? true : false);
-  let checkNewPassword = () =>
-    checkOldPassword() && confirmPassword() ? true : false;
-
-  let save = () =>
-    checkNewPassword()
-      ? changePassword(newPass, props.token)
-          .then(res => console.log(res))
-          .catch(e => console.log(e))
-      : console.log("error");
-
-  return (
-    <div className="row">
-      <div className="col s12 m6">
-        <div className="card ">
-          <div className="card-content">
-            <span className="card-title black-text">Change</span>
-            <div className="row">
-              <LoadInput
-                id="oldPass"
-                label="Old password"
-                onChange={e => setOldPass(e.target.value)}
-              />
-            </div>
-            <div className="row">
-              <LoadInput
-                id="newPass"
-                label="New password"
-                onChange={e => setNewPass(e.target.value)}
-              />
-            </div>
-            <div className="row">
-              <LoadInput
-                id="confirmPass"
-                label="Confirm password"
-                onChange={e => setConfirmPass(e.target.value)}
-              />
-            </div>
-            <div class="card-action">
-              <Button btnName="Save changes" onClick={save} />
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function changePassword(password, token) {
-  console.log(password);
-  return new Promise((resolve, reject) => {
-    fetch("http://localhost:8081/api/users/pass/" + token, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json;charset=utf-8"
-      },
-      body: JSON.stringify({
-        token: localStorage.getItem("token"),
-        password: password
-      })
-    })
-      .then(res => res.json())
-      .then(res => {
-        resolve(res);
-      })
-      .catch(e => reject(e));
-  });
-}
-function ProfileData(props) {
-  return (
-    <div className="card-action">
-      <ProfileDataItem dataTitle="Email:" data={props.email} />
-      <ProfileDataItem dataTitle="Assigned truck:" data="" />
-    </div>
-  );
-}
-
-function ProfileDataItem(props) {
-  return (
-    <h6>
-      {props.dataTitle} <span className="data__container">{props.data} </span>
-    </h6>
-  );
-}

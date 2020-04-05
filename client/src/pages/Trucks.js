@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import ReactDOM from "react-dom";
-import { Button } from "../components/Form";
+
+import {TruckInfo} from './Truck/TruckInfo'
 
 export class TrucksCard extends React.Component {
   constructor(props) {
@@ -41,21 +42,21 @@ export class TrucksCard extends React.Component {
     }
   }
 
-  saveTruckStatus(status, assigned_to, IS, assignBtn) {
+  saveTruckStatus(status, IS, assignBtn) {
     fetch("http://localhost:8081/api/trucks/" + this.state.id, {
       method: "PUT",
       headers: {
         "Content-type": "application/json; charset=UTF-8"
       },
       body: JSON.stringify({
-        status: status,
-        assigned_to: assigned_to
+        status: status
+        //assigned_to: assigned_to
       })
     })
       .then(response => {
         response.json();
         this.setState({
-          assigned_to: assigned_to,
+          //assigned_to: assigned_to,
           IS: IS,
           status: status,
           assignBtn: assignBtn
@@ -88,19 +89,19 @@ export class TrucksCard extends React.Component {
   assignTruck() {
     let IS = false;
     let status = "ON LOAD";
-    let assignedTo = this.props.parent;
+   // let assignedTo = this.props.parent;
     let assignBtn = "Cancel";
 
-    this.saveTruckStatus(status, assignedTo, IS, assignBtn);
+    this.saveTruckStatus(status,  IS, assignBtn);
   }
 
   cancelTruck() {
     let IS = true;
     let status = "IN SERVICE";
-    let assignedTo = "nobody";
+    //let assignedTo = "nobody";
     let assignBtn = "Assign the truck";
 
-    this.saveTruckStatus(status, assignedTo, IS, assignBtn);
+    this.saveTruckStatus(status,  IS, assignBtn);
   }
 
   deleteTruckInDB() {
@@ -120,7 +121,10 @@ export class TrucksCard extends React.Component {
         this.deleteTruckInDB();
 
       })
+    } else{
+      this.deleteTruckInDB();
     }
+    
     
   }
 
@@ -152,47 +156,6 @@ export class TrucksCard extends React.Component {
   }
 }
 
-function TruckInfo(props) {
-  return (
-    <div className="card-content">
-      <div className="truck-info">
-        <Info infoTitle="Status:" infoDetail={props.info.status} />
-        <Info infoTitle="Truck Type:" infoDetail={props.info.truckType} />
-        <Info infoTitle="Payload:" infoDetail={props.info.payload} />
-        <Info infoTitle="Date of creation:" infoDetail={props.info.date} />
-        <Dimension infoTitle="Dimension:" infoDetail={props.info.dimension} />
-        <Button
-          btnName={props.assignBtn}
-          onClick={props.onClick.changeStatus}
-        />
-        <Button
-          btnName="Delete the truck"
-          onClick={props.onClick.deleteTruck}
-        />
-      </div>
-    </div>
-  );
-}
 
-function Info(props) {
-  return (
-    <h6>
-      {props.infoTitle}
-      <span>{props.infoDetail}</span>
-    </h6>
-  );
-}
 
-function Dimension(props) {
-  return (
-    <h6>
-      {props.infoTitle}
-      <span className="truck-info__dimension">
-        {/* <span className="truck-info__width">{props.infoDetail.width}</span>x
-        <span className="truck-info__length">{props.infoDetail.length}</span>x
-        <span className="truck-info__height">{props.infoDetail.height}</span> */}
-        {props.infoDetail.dimension}
-      </span>
-    </h6>
-  );
-}
+

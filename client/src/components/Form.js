@@ -1,26 +1,26 @@
 import React, { Component } from "react";
-function handleChangeEmail(event) {
-    this.setState({
-      email: event.target.value
-    });
-    console.log(this.state.email)
-  }
+// function handleChangeEmail(event) {
+//     this.setState({
+//       email: event.target.value
+//     });
+//     console.log(this.state.email)
+//   }
 
 
-  function handleChangePassword (event) {
-    this.setState({
-      password: event.target.value
-    });
-    console.log(this.state.password)
-  }
+  // function handleChangePassword (event) {
+  //   this.setState({
+  //     password: event.target.value
+  //   });
+  //   console.log(this.state.password)
+  // }
 
 
-  function handleSwitch(event){
-    this.setState({
-        isDriver: event.target.checked
-      });
-      console.log(this.state.isDriver)
-  }
+  // function handleSwitch(event){
+  //   this.setState({
+  //       isDriver: event.target.checked
+  //     });
+  //     console.log(this.state.isDriver)
+  // }
 
 
 
@@ -42,31 +42,21 @@ function handleChangeEmail(event) {
 
 
 
-function Button(props) {
-    return (
-      <button
-        className="btn waves-effect light-blue lighten-3 black-text"
-       type="submit"
-        name="action"
-        onClick={props.onClick}
+// function Button(props) {
+//     return (
+//       <button
+//         className="btn waves-effect light-blue lighten-3 black-text"
+//        type="submit"
+//         name="action"
+//         onClick={props.onClick}
       
-      >
-        {props.btnName}
-      </button>
-    );
-  }
+//       >
+//         {props.btnName}
+//       </button>
+//     );
+//   }
   
-  function Switch(props) {
-    return (
-      <div class="switch  isDriver">
-        <label for="isDriver">
-          I am a shipper
-          <input id="isDriver" type="checkbox" onChange={props.onChange}/>
-          <span class="lever"></span>I am a driver
-        </label>
-      </div>
-    );
-  }
+ 
   
   function EmailInput(props) {
     return (
@@ -102,4 +92,4 @@ function Button(props) {
     );
   }
   
-  export {ProfileTitle,handleChangeEmail,handleChangePassword,handleSwitch, Button, EmailInput,PasswordInput,Switch}
+  export {ProfileTitle, EmailInput,PasswordInput}

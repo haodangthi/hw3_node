@@ -1,13 +1,12 @@
 import React, { Component } from "react";
-import {
-  handleChangeEmail,
-  handleChangePassword,
-  handleSwitch,
-  Button,
-  Switch,
-  EmailInput,
-  PasswordInput
-} from "../components/Form";
+import {EmailInput,PasswordInput }from '../components/Form'
+import {handleChangeEmail} from "../components/handlers/handleChangeEmail"
+import {handleChangePassword} from "../components/handlers/handleChangePassword"
+import {handleSwitch} from "../components/handlers/handleSwitch"
+import {Button} from "../components/Button"
+import {Switch} from "../components/Switch"
+let pf=require('./help/postFetch')
+
 
 export class SignUp extends React.Component {
   constructor(props) {
@@ -42,24 +41,33 @@ export class SignUp extends React.Component {
   }
   handleSubmit(e) {
     e.preventDefault();
-    console.log("submitted")
-    fetch("http://localhost:8081/api/users", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json;charset=utf-8"
-        },
-        body: JSON.stringify({
-          isDriver: this.state.isDriver,
-          name: this.state.name,
-          surname: this.state.surname,
-          email: this.state.email,
-          password: this.state.password
-        })
-      })
-        .then(res => res.json())
-        .then(res => {
-          console.log(res)
-        }).catch(e=>{console.log(e.message)});
+    let url="http://localhost:8081/api/users"
+    let bodyData={
+            isDriver: this.state.isDriver,
+            name: this.state.name,
+            surname: this.state.surname,
+            email: this.state.email,
+            password: this.state.password
+          }
+    pf.postFetch(url,bodyData)
+
+    // fetch("http://localhost:8081/api/users", {
+    //     method: "POST",
+    //     headers: {
+    //       "Content-Type": "application/json;charset=utf-8"
+    //     },
+    //     body: JSON.stringify({
+    //       isDriver: this.state.isDriver,
+    //       name: this.state.name,
+    //       surname: this.state.surname,
+    //       email: this.state.email,
+    //       password: this.state.password
+    //     })
+    //   })
+    //     .then(res => res.json())
+    //     .then(res => {
+    //       console.log(res)
+    //     }).catch(e=>{console.log(e.message)});
   }
 
   render() {

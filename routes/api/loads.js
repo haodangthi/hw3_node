@@ -31,18 +31,23 @@ router.post("/api/loads", (req, res) => {
   );
 });
 
+
+
+//assign load to truck 
 router.put("/api/loads/:loadId", (req, res) => {
   Load.findByIdAndUpdate(req.params.loadId, {
+    state:req.body.state,
     status: req.body.status,
     assigned_to: req.body.assigned_to
   }).then(user => res.json({ status: "ok", user }));
 });
 
 
+
 router.delete("/api/loads/:loadId", (req, res) => {
   Load.findByIdAndDelete(req.params.loadId).then(load => {
     let shipperId = load.created_by;
-    Truck.find({ created_by: shipperId }).then(trucks => {
+    Load.find({ created_by: shipperId }).then(trucks => {
       res.json({ trucks });
     });
   });

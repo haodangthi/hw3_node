@@ -15,7 +15,7 @@ import { ShipperPage } from "./pages/Shipper";
 
 // }
 
-export const useRoutes = (isAuthentficated) => {
+export const useRoutes = (isAuthentficated,token) => {
  
 
   if (isAuthentficated) {
@@ -23,11 +23,12 @@ export const useRoutes = (isAuthentficated) => {
       
       <Switch>
         <Route path="/">
-          <ShipperPage />
+          <ShipperPage/>
+          {/* <UserPage /> */}
         </Route>
-        <Route path="/user">
-          <UserPage />
-        </Route>
+        {/* <Route path="/user">
+          
+        </Route> */}
         {/* <Redirect to="/"/> */}
       </Switch>
     )
