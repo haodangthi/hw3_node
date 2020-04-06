@@ -1,10 +1,11 @@
-import React, { Component } from "react";
+import React, { Component, useContext } from "react";
 import {EmailInput,PasswordInput }from '../components/Form'
 import {handleChangeEmail} from "../components/handlers/handleChangeEmail"
 import {handleChangePassword} from "../components/handlers/handleChangePassword"
 import {handleSwitch} from "../components/handlers/handleSwitch"
 import {Button} from "../components/Button"
 import {Switch} from "../components/Switch"
+import { UserContext } from "../hooks/UserContext";
 
 let pf=require('./help/postFetch')
 
@@ -24,6 +25,10 @@ export class Login extends React.Component {
 
   handleSubmit(e){
     e.preventDefault();
+    let setAuth = useContext(UserContext)
+    let setIsDriver = useContext(UserContext)
+    let setToken=useContext(UserContext)
+
     let url="http://localhost:8081/api/login"
     let bodyData={
       isDriver: this.state.isDriver,
@@ -33,6 +38,12 @@ export class Login extends React.Component {
     pf.postFetch(url,bodyData).then(res=>{
       let token = res.jwt_token;
          localStorage.setItem("token", token);
+         localStorage.setItem("isDriver",this.state.isDriver)
+         //setAuth(true)
+         setIsDriver(this.state.isDriver)
+         setToken(token)
+         
+         
     })
     // fetch("http://localhost:8081/api/login", {
     //     method: "POST",
