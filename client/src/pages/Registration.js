@@ -1,12 +1,11 @@
 import React, { Component } from "react";
-import {EmailInput,PasswordInput }from '../components/Form'
-import {handleChangeEmail} from "../components/handlers/handleChangeEmail"
-import {handleChangePassword} from "../components/handlers/handleChangePassword"
-import {handleSwitch} from "../components/handlers/handleSwitch"
-import {Button} from "../components/Button"
-import {Switch} from "../components/Switch"
-let pf=require('./help/postFetch')
-
+import { EmailInput, PasswordInput } from "../components/Form";
+import { handleChangeEmail } from "../components/handlers/handleChangeEmail";
+import { handleChangePassword } from "../components/handlers/handleChangePassword";
+import { handleSwitch } from "../components/handlers/handleSwitch";
+import { Button } from "../components/Button";
+import { Switch } from "../components/Switch";
+let pf = require("./help/postFetch");
 
 export class SignUp extends React.Component {
   constructor(props) {
@@ -16,40 +15,40 @@ export class SignUp extends React.Component {
       surname: "",
       email: "",
       password: "",
-      isDriver: false
+      isDriver: false,
     };
 
     this.handleChangeEmail = handleChangeEmail.bind(this);
     this.handleChangePassword = handleChangePassword.bind(this);
-    
+
     this.handleSwitch = handleSwitch.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleChangeName= this.handleChangeName.bind(this);
-    this.handleChangeSurname= this.handleChangeSurname.bind(this);
+    this.handleChangeName = this.handleChangeName.bind(this);
+    this.handleChangeSurname = this.handleChangeSurname.bind(this);
   }
-  handleChangeName(event){
+  handleChangeName(event) {
     this.setState({
-        name: event.target.value
-      });
-      console.log(this.state.name)
+      name: event.target.value,
+    });
+    console.log(this.state.name);
   }
-  handleChangeSurname(event){
+  handleChangeSurname(event) {
     this.setState({
-        surname: event.target.value
-      });
-      console.log(this.state.surname)
+      surname: event.target.value,
+    });
+    console.log(this.state.surname);
   }
   handleSubmit(e) {
     e.preventDefault();
-    let url="http://localhost:8081/api/users"
-    let bodyData={
-            isDriver: this.state.isDriver,
-            name: this.state.name,
-            surname: this.state.surname,
-            email: this.state.email,
-            password: this.state.password
-          }
-    pf.postFetch(url,bodyData)
+    let url = "http://localhost:8081/api/users";
+    let bodyData = {
+      isDriver: this.state.isDriver,
+      name: this.state.name,
+      surname: this.state.surname,
+      email: this.state.email,
+      password: this.state.password,
+    };
+    pf.postFetch(url, bodyData);
 
     // fetch("http://localhost:8081/api/users", {
     //     method: "POST",
@@ -73,14 +72,25 @@ export class SignUp extends React.Component {
   render() {
     return (
       <div className="row">
-        <form action="/api/users" method="POST" class="col s12" onSubmit={this.handleSubmit}>
+        <form
+          action="/api/users"
+          method="POST"
+          class="col s12"
+          onSubmit={this.handleSubmit}
+        >
           <div className="col s12 m8">
             <div className="card">
               <div className="card-content ">
                 <h3 className="login">Create an account</h3>
                 <div class="row">
-                  <NameInput email={this.state.name} onChange={this.handleChangeName}/>
-                  <SurnameInput  email={this.state.surname} onChange={this.handleChangeSurname}/>
+                  <NameInput
+                    email={this.state.name}
+                    onChange={this.handleChangeName}
+                  />
+                  <SurnameInput
+                    email={this.state.surname}
+                    onChange={this.handleChangeSurname}
+                  />
                 </div>
                 <Switch onChange={this.handleSwitch} />
 
@@ -107,8 +117,13 @@ export class SignUp extends React.Component {
 function NameInput(props) {
   return (
     <div className="input-field col s5">
-      <input id="first_name" type="text" class="validate" value={props.name}
-            onChange={props.onChange}/>
+      <input
+        id="first_name"
+        type="text"
+        class="validate"
+        value={props.name}
+        onChange={props.onChange}
+      />
       <label for="first_name">First Name</label>
     </div>
   );
@@ -117,8 +132,13 @@ function NameInput(props) {
 function SurnameInput(props) {
   return (
     <div className="input-field col s5">
-      <input id="last_name" type="text" class="validate" value={props.surname}
-            onChange={props.onChange}/>
+      <input
+        id="last_name"
+        type="text"
+        class="validate"
+        value={props.surname}
+        onChange={props.onChange}
+      />
       <label for="last_name">Last Name</label>
     </div>
   );

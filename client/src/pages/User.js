@@ -1,4 +1,4 @@
-import React, { Component,useState } from "react";
+import React, { Component, useState } from "react";
 import { ProfileTitle } from "../components/Form";
 import { TrucksCard } from "./Trucks";
 import { Button } from "../components/Button";
@@ -9,6 +9,7 @@ import { sprinter, largeStraight, smallStraight } from "./Driver/truckTypes";
 import { findTruckById, getLoad, getLoadId, showLoad } from "./Driver/viewLoad";
 import { Select } from "./Driver/Select";
 import { ProfileData } from "./Driver/ProfileData";
+import { ChangeState } from "./Driver/ChangeLoadState";
 const pf = require("./help/updateDatabase");
 const postf = require("./help/postFetch");
 const gf = require("./help/getFetch");
@@ -55,17 +56,18 @@ export class DriverPage extends React.Component {
     this.assignTruck = this.assignTruck.bind(this);
     this.cancelTruck = this.cancelTruck.bind(this);
     this.saveChangedStatus = this.saveChangedStatus.bind(this);
-
-    //if we delete the assigned truck
-    //this.resetStatus=this.resetStatus.bind(this)
-    // this.getAssignedTrucks=getAssignedTrucks.bind(this)
-
     // VIEW LOAD
     this.findTruckById = findTruckById.bind(this);
     this.getLoadId = getLoadId.bind(this);
     this.getLoad = getLoad.bind(this);
     this.showLoad = showLoad.bind(this);
-   
+
+    //
+    this.resetDriverStatus = this.resetDriverStatus.bind(this);
+  }
+
+  resetDriverStatus(id) {
+    this.changeAssignedStatus(id);
   }
 
   componentDidMount() {
@@ -103,19 +105,8 @@ export class DriverPage extends React.Component {
       assignedTruck: assignedTruck,
     };
 
-    // return fetch( {
-    //   method: "PUT",
-    //   headers: {
-    //     "Content-type": "application/json; charset=UTF-8",
-    //   },
-    //   body: JSON.stringify({
-    //     isAssigned: isAssigned,
-    //     assignedTruck: assignedTruck,
-    //   }),
-    // })
-    //.then((response) => response.json())
-
-    pf.updateDB(url, body)
+    return pf
+      .updateDB(url, body)
       .then(() => {
         this.setState({
           isAssigned: isAssigned,
@@ -241,7 +232,6 @@ export class DriverPage extends React.Component {
   allTrucksOnPage() {
     return this.state.truckCards;
   }
-  
 
   render() {
     return (
@@ -270,7 +260,6 @@ export class DriverPage extends React.Component {
                   onClick={this.showAlltrucks}
                 />
                 <Button btnName="View load" onClick={this.showLoad} />
-                
               </div>
               {this.state.passwordField ? (
                 <ChangePasswordForm
@@ -286,7 +275,10 @@ export class DriverPage extends React.Component {
                     key={this.state.currentLoad._id}
                     loadData={this.state.currentLoad}
                   />
-                  <ChangeState load={this.state.currentLoad}/>
+                  <ChangeState
+                    load={this.state.currentLoad}
+                    action={this.resetDriverStatus}
+                  />
                 </div>
               ) : (
                 ""
@@ -300,48 +292,4 @@ export class DriverPage extends React.Component {
       </div>
     );
   }
-}
-
-function ChangeState(props) {
-  const [loadState,setLoadState]=useState(props.load.state)
-  const [id,setId]=useState(props.load._id)
-  
-  const chooseState=(e)=>setLoadState(e.target.options[e.target.selectedIndex].value)
-  const saveState=()=>{
-    changeStateInDB(id,loadState).then((res)=>{
-      console.log(loadState)
-      
-
-    })
-  }
-  
-
-  return (
-    <div>
-      <h4>Change State</h4>
-      <div className="select">
-        <select onChange={chooseState}>
-          <option>En route to pick up</option>
-          <option>Arrived to pick up</option>
-          <option>On route to delivery</option>
-          <option>Arrived to delivery</option>
-        </select>
-        <div className="select__arrow"></div>
-      </div>
-      <Button btnName="Save state" onClick={saveState} />{" "}
-    </div>
-  );
-}
-
-function changeStateInDB(loadId,state){
-  let status="Assigned"
-  if(state==="Arrived to delivery") {
-     status= "Shipped"
-  }
-  const url="http://localhost:8081/api/load/state/"+loadId
-  const body ={
-    state: state,
-    status: status,
-  }
-  return pf.updateDB(url,body)
 }

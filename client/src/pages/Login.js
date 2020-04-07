@@ -1,5 +1,5 @@
 import React, { Component, useContext } from "react";
-import {withRouter} from "react-router-dom";
+import { withRouter } from "react-router-dom";
 import { EmailInput, PasswordInput } from "../components/Form";
 import { handleChangeEmail } from "../components/handlers/handleChangeEmail";
 import { handleChangePassword } from "../components/handlers/handleChangePassword";
@@ -17,8 +17,7 @@ class LoginPage extends React.Component {
     this.state = {
       email: "",
       password: "",
-      isDriver: false
-      
+      isDriver: false,
     };
 
     this.handleChangeEmail = handleChangeEmail.bind(this);
@@ -27,9 +26,7 @@ class LoginPage extends React.Component {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  componentDidMount() {
-    
-  }
+  componentDidMount() {}
 
   handleSubmit(e) {
     e.preventDefault();
@@ -38,24 +35,31 @@ class LoginPage extends React.Component {
     const bodyData = {
       isDriver: this.state.isDriver,
       email: this.state.email,
-      password: this.state.password
+      password: this.state.password,
     };
-    pf.postFetch(url, bodyData).then(res => res.json())
-      .then(res => {
-      if (res.jwt_token) {
-        
-        let token = res.jwt_token;
-        localStorage.setItem("token", token);
-        localStorage.setItem("isDriver", this.state.isDriver);
+    pf.postFetch(url, bodyData)
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.jwt_token) {
+          let token = res.jwt_token;
+          localStorage.setItem("token", token);
+          localStorage.setItem("isDriver", this.state.isDriver);
 
-        this.context.setAuth(true);
-        this.context.setIsDriver(this.state.isDriver);
-        this.context.setToken(token);
-        if(this.state.isDriver){history.push('/driver')}else {history.push('/shipper')}
-      } else {
-        console.log("wrong email or password");
-      }
-    }).catch(e=>{console.log(e.message);})
+          this.context.setAuth(true);
+          this.context.setIsDriver(this.state.isDriver);
+          this.context.setToken(token);
+          if (this.state.isDriver) {
+            history.push("/driver");
+          } else {
+            history.push("/shipper");
+          }
+        } else {
+          console.log("wrong email or password");
+        }
+      })
+      .catch((e) => {
+        console.log(e.message);
+      });
   }
 
   render() {
@@ -90,70 +94,3 @@ class LoginPage extends React.Component {
 }
 export default withRouter(LoginPage);
 
-// export function LoginPage(){
-//   const isAuthentficated = useContext(UserContext)
-//   console.log(isAuthentficated)
-// return(
-//   <Login />
-// )
-
-// }
-
-// function Button(props) {
-//   return (
-//     <button
-//       className="btn waves-effect waves-light"
-//      type="submit"
-//       name="action"
-
-//     >
-//       {props.btnName}
-//     </button>
-//   );
-// }
-
-// function Switch(props) {
-//   return (
-//     <div class="switch  isDriver">
-//       <label for="isDriver">
-//         I am a shipper
-//         <input id="isDriver" type="checkbox" onChange={props.onChange}/>
-//         <span class="lever"></span>I am a driver
-//       </label>
-//     </div>
-//   );
-// }
-
-// function EmailInput(props) {
-//   return (
-//     <div className="row">
-//       <div className="input-field col s8">
-//         <input
-//           id="email"
-//           type="email"
-//           class="validate"
-//           value={props.email}
-//           onChange={props.onChange}
-//         />
-//         <label for="email">Email</label>
-//       </div>
-//     </div>
-//   );
-// }
-
-// function PasswordInput(props) {
-//   return (
-//     <div className="row">
-//       <div className="input-field col s8">
-//         <input
-//           id="password"
-//           type="password"
-//           className="validate"
-//           value={props.password}
-//           onChange={props.onChange}
-//         />
-//         <label for="password">Password</label>
-//       </div>
-//     </div>
-//   );
-// }

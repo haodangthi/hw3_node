@@ -15,7 +15,7 @@ export function Load(props) {
   const [dimension, setDimension] = useState(props.loadData.dimension);
   const [payload, setPayload] = useState(props.loadData.payload);
   const [foundTruck, setFoundTruck] = useState([]);
-  
+
   let postALoad = () => {
     getAssignedTrucks().then((res) => {
       let f = res.filter((e) => {
@@ -60,4 +60,3 @@ function getAssignedTrucks() {
   let url = "http://localhost:8081/api/trucks";
   return help.getFetch(url);
 }
-

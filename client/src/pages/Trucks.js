@@ -50,13 +50,11 @@ export class TrucksCard extends React.Component {
       },
       body: JSON.stringify({
         status: status,
-        //assigned_to: assigned_to
       }),
     })
       .then((response) => {
         response.json();
         this.setState({
-          //assigned_to: assigned_to,
           IS: IS,
           status: status,
           assignBtn: assignBtn,
@@ -93,7 +91,6 @@ export class TrucksCard extends React.Component {
   assignTruck() {
     let IS = false;
     let status = "ON LOAD";
-    // let assignedTo = this.props.parent;
     let assignBtn = "Cancel";
 
     this.saveTruckStatus(status, IS, assignBtn);
@@ -102,7 +99,6 @@ export class TrucksCard extends React.Component {
   cancelTruck() {
     let IS = true;
     let status = "IN SERVICE";
-    //let assignedTo = "nobody";
     let assignBtn = "Assign the truck";
 
     this.saveTruckStatus(status, IS, assignBtn);

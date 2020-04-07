@@ -12,7 +12,7 @@ router.post("/api/trucks", (req, res) => {
   let date = new Date();
   date = date.toLocaleDateString();
   console.log(req.body.payload);
-  let userID = h.getUserID(req.body.token); 
+  let userID = h.getUserID(req.body.token);
   saveToDB(
     createTruck(
       userID,
@@ -28,56 +28,39 @@ router.post("/api/trucks", (req, res) => {
 
 router.get("/api/trucks/:token", (req, res) => {
   let userID = h.getUserID(req.params.token);
-  Truck.find({ created_by: userID }).then(trucks =>
+  Truck.find({ created_by: userID }).then((trucks) =>
     res.json({ status: "ok", trucks })
   );
 });
 
-
-
-
-router.get("/api/trucks",(req,res)=>{
-  Truck.find({}).then(trucks=>{
-    let filtered=trucks.filter(truck=>{
-     return truck.status==='ON LOAD'&& truck.assigned_to==="nobody" 
-    })
-    res.json(filtered)
-  })
-})
-
-
-
+router.get("/api/trucks", (req, res) => {
+  Truck.find({}).then((trucks) => {
+    let filtered = trucks.filter((truck) => {
+      return truck.status === "ON LOAD" && truck.assigned_to === "nobody";
+    });
+    res.json(filtered);
+  });
+});
 
 router.delete("/api/trucks/:truckId", (req, res) => {
-  Truck.findByIdAndDelete(req.params.truckId).then(truck => {
+  Truck.findByIdAndDelete(req.params.truckId).then((truck) => {
     let userId = truck.created_by;
-    Truck.find({ created_by: userId }).then(trucks => {
+    Truck.find({ created_by: userId }).then((trucks) => {
       res.json({ trucks });
     });
   });
 });
 
 router.put("/api/trucks/:truckId", (req, res) => {
-  
   Truck.findByIdAndUpdate(req.params.truckId, {
-    status: req.body.status
-    //assigned_to: req.body.assigned_to
-      }).then(user => res.json({ status: "ok", user }));
+    status: req.body.status,
+  }).then((user) => res.json({ status: "ok", user }));
 });
 router.put("/api/trucks/assign/:truckId", (req, res) => {
-  
   Truck.findByIdAndUpdate(req.params.truckId, {
-    
-    assigned_to: req.body.assigned_to
-      }).then(user => res.json({ status: "ok", user }));
+    assigned_to: req.body.assigned_to,
+  }).then((user) => res.json({ status: "ok", user }));
 });
-
-
-
-
-
-
-
 
 function createTruck(driverID, type, payload, dimension, status, date) {
   return new Truck({
@@ -87,21 +70,21 @@ function createTruck(driverID, type, payload, dimension, status, date) {
     status: status,
     created_by: driverID,
     assigned_to: "nobody",
-    date: date
+    date: date,
   });
 }
 
 function saveToDB(item, res) {
   item
     .save()
-    .then(truck => {
+    .then((truck) => {
       console.log("truck's been created");
       res.json({
         status: "created",
-        truck
+        truck,
       });
     })
-    .catch(e => {
+    .catch((e) => {
       res.status(500).json({ status: e.message });
     });
 }

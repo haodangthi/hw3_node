@@ -13,8 +13,8 @@ router.get("/api/users/:token", (req, res) => {
   let userID = h.getUserID(req.params.token);
   userType
     .findById(userID)
-    .then(user => res.json({ user }))
-    .catch(e => console.log(e));
+    .then((user) => res.json({ user }))
+    .catch((e) => console.log(e));
 });
 
 router.post("/api/users", (req, res) => {
@@ -44,10 +44,10 @@ router.post("/api/users", (req, res) => {
 router.put("/api/users/:driverId", (req, res) => {
   Driver.findByIdAndUpdate(req.params.driverId, {
     isAssigned: req.body.isAssigned,
-    assignedTruck: req.body.assignedTruck
+    assignedTruck: req.body.assignedTruck,
   })
-    .then(user => res.json({ status: "updated", user }))
-    .catch(e => console.log(e));
+    .then((user) => res.json({ status: "updated", user }))
+    .catch((e) => console.log(e));
 });
 
 router.put("/api/users/pass/:token", (req, res) => {
@@ -56,16 +56,16 @@ router.put("/api/users/pass/:token", (req, res) => {
   let userID = h.getUserID(req.params.token);
   userType
     .findByIdAndUpdate(userID, {
-      password: req.body.password
+      password: req.body.password,
     })
-    .then(user => res.json({ status: "user's password updated", user }))
-    .catch(e => console.log(e));
+    .then((user) => res.json({ status: "user's password updated", user }))
+    .catch((e) => console.log(e));
 });
 
 router.delete("/api/users/:shipperId", (req, res) => {
   Shipper.findByIdAndDelete(req.params.shipperId)
-    .then(user => res.json({ status: "user deleted ", user }))
-    .catch(e => console.log(e));
+    .then((user) => res.json({ status: "user deleted ", user }))
+    .catch((e) => console.log(e));
 });
 
 function createDriver(name, surname, email, password) {
@@ -76,7 +76,7 @@ function createDriver(name, surname, email, password) {
     password: password,
     isAssigned: false,
     assignedTruck: "",
-    isDriver: true
+    isDriver: true,
   });
 }
 
@@ -86,7 +86,7 @@ function createShipper(name, surname, email, password) {
     surname: surname,
     email: email,
     password: password,
-    isDriver: false
+    isDriver: false,
   });
 }
 
@@ -96,10 +96,10 @@ function saveUserToDB(user, res) {
     .then(() => {
       res.json({
         status: "new user ok",
-        user
+        user,
       });
     })
-    .catch(e => {
+    .catch((e) => {
       res.status(500).json({ status: e.message });
     });
 }

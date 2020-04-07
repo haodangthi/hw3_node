@@ -1,16 +1,16 @@
 import React, { Component, useState, useEffect } from "react";
-import {ProfileTitle } from "../components/Form";
-import {Button} from "../components/Button"
+import { ProfileTitle } from "../components/Form";
+import { Button } from "../components/Button";
 import { useContext } from "react";
-import UserContext  from "../hooks/UserContext";
+import UserContext from "../hooks/UserContext";
 
 import { Load } from "./Loads";
 import { ChangePasswordForm } from "./Shipper/ChangePassword";
 import { ProfileData } from "./Shipper/ProfileData";
-import {CreateLoadForm} from "./Shipper/CreateLoadField"
+import { CreateLoadForm } from "./Shipper/CreateLoadField";
 
 let gf = require("./help/getFetch");
-let cl=require('./Shipper/creatLoad')
+let cl = require("./Shipper/creatLoad");
 
 export function ShipperPage() {
   let token = useContext(UserContext).token;
@@ -26,19 +26,14 @@ export function ShipperPage() {
 
   useEffect(() => {
     getUserInfo(token)
+      .then((res) => {
+        setUser(res.user);
+        console.log(res);
+      })
 
-    .then(res => {
-      setUser(res.user);
-      console.log(res)
-    })
-
-    .catch(e => {
-      console.log(e);
-    })
-
-
-
-
+      .catch((e) => {
+        console.log(e);
+      });
   }, []);
 
   useEffect(() => {
@@ -49,8 +44,8 @@ export function ShipperPage() {
     cl.createLoad(+width, +lenght, +height, +payload, +token);
 
   let viewLoads = () => {
-    viewCreatedLoads().then(res => {
-      let loads = res.trucks.map(e => <Load key={e._id} loadData={e} />);
+    viewCreatedLoads().then((res) => {
+      let loads = res.trucks.map((e) => <Load key={e._id} loadData={e} />);
       setLoads(loads);
       setShownLoads(!shownLoads);
     });
@@ -86,16 +81,16 @@ export function ShipperPage() {
                 ""
               )}
               <CreateLoadForm
-                width={e => {
+                width={(e) => {
                   setWidth(e.target.value);
                 }}
-                lenght={e => {
+                lenght={(e) => {
                   setLenght(e.target.value);
                 }}
-                height={e => {
+                height={(e) => {
                   setHeight(e.target.value);
                 }}
-                payload={e => {
+                payload={(e) => {
                   setPayload(e.target.value);
                 }}
                 onClick={createLoadFunc}
@@ -114,9 +109,7 @@ function getUserInfo(token) {
   return gf.getFetch(url);
 }
 
-
 function viewCreatedLoads() {
   let url = "http://localhost:8081/api/loads/" + localStorage.getItem("token");
   return gf.getFetch(url);
 }
-
