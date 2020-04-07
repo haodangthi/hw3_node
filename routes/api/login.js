@@ -13,17 +13,20 @@ router.post("/api/login", (req, res) => {
 
   findUser(userType, email, password)
     .then(user => {
-      if (!user) {
+      if (!user||user.isDriver!==isDriver) {
+        console.log("No user")
         throw new Error();
-      }
-      console.log(user);
+      } else {
+        console.log(user);
       let jwt_token = jwt.sign(JSON.stringify(user), secret);
       console.log(jwt_token);
       res.json({ jwt_token});
+      }
+      
     })
     .catch(e => {
       console.log("User is not found");
-      res.status(401).json({ status: e.message });
+      res.status(401).json();
     });
 });
 

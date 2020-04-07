@@ -1,15 +1,16 @@
 import React from "react";
 import { SignUp } from "../pages/Registration";
 import { useContext } from "react";
-import {UserContext} from "../hooks/UserContext"
+import UserContext from "../hooks/UserContext"
 
 export function Navbar() {
-  let isAuthentficated = useContext(UserContext);
-  let setAuth=useContext(UserContext);
+  let isAuthentficated = useContext(UserContext).isAuthentficated;
+  let setAuth=useContext(UserContext).setAuth;
+  let isDriver=useContext(UserContext).isDriver;
   let logout=()=>{
     console.log("log out")
-     localStorage.setItem("token",null)
-     localStorage.setItem("isDriver",null)
+     localStorage.setItem("token","")
+     localStorage.setItem("isDriver","")
      setAuth(false)
   }
   
@@ -21,7 +22,7 @@ export function Navbar() {
           Uber
         </a>
 
-        {isAuthentficated ? (
+        {isAuthentficated  ? (
           <LogOut onClick={logout}/>
         ) : (
           <ul id="nav-mobile" className="right ">

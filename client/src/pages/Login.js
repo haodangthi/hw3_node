@@ -1,66 +1,61 @@
 import React, { Component, useContext } from "react";
-import {EmailInput,PasswordInput }from '../components/Form'
-import {handleChangeEmail} from "../components/handlers/handleChangeEmail"
-import {handleChangePassword} from "../components/handlers/handleChangePassword"
-import {handleSwitch} from "../components/handlers/handleSwitch"
-import {Button} from "../components/Button"
-import {Switch} from "../components/Switch"
-import { UserContext } from "../hooks/UserContext";
+import {withRouter} from "react-router-dom";
+import { EmailInput, PasswordInput } from "../components/Form";
+import { handleChangeEmail } from "../components/handlers/handleChangeEmail";
+import { handleChangePassword } from "../components/handlers/handleChangePassword";
+import { handleSwitch } from "../components/handlers/handleSwitch";
+import { Button } from "../components/Button";
+import { Switch } from "../components/Switch";
+import UserContext from "../hooks/UserContext";
 
-let pf=require('./help/postFetch')
+let pf = require("./help/postFetch");
 
-export class Login extends React.Component {
+class LoginPage extends React.Component {
+  static contextType = UserContext;
   constructor(props) {
     super(props);
     this.state = {
       email: "",
       password: "",
-      isDriver:false
+      isDriver: false
+      
     };
+
     this.handleChangeEmail = handleChangeEmail.bind(this);
     this.handleChangePassword = handleChangePassword.bind(this);
-    this.handleSwitch=handleSwitch.bind(this)
-    this.handleSubmit=this.handleSubmit.bind(this)
+    this.handleSwitch = handleSwitch.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleSubmit(e){
-    e.preventDefault();
-    let setAuth = useContext(UserContext)
-    let setIsDriver = useContext(UserContext)
-    let setToken=useContext(UserContext)
+  componentDidMount() {
+    
+  }
 
-    let url="http://localhost:8081/api/login"
-    let bodyData={
+  handleSubmit(e) {
+    e.preventDefault();
+    const history = this.props.history;
+    const url = "http://localhost:8081/api/login";
+    const bodyData = {
       isDriver: this.state.isDriver,
       email: this.state.email,
       password: this.state.password
-    }
-    pf.postFetch(url,bodyData).then(res=>{
-      let token = res.jwt_token;
-         localStorage.setItem("token", token);
-         localStorage.setItem("isDriver",this.state.isDriver)
-         //setAuth(true)
-         setIsDriver(this.state.isDriver)
-         setToken(token)
-         
-         
-    })
-    // fetch("http://localhost:8081/api/login", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json;charset=utf-8"
-    //     },
-    //     body: JSON.stringify({
-    //       isDriver: this.state.isDriver,
-    //       email: this.state.email,
-    //       password: this.state.password
-    //     })
-    //   })
-    //     .then(res => res.json())
-    //     .then(res => {
-    //       let token = res.jwt_token;
-    //       localStorage.setItem("token", token);
-    //     });
+    };
+    pf.postFetch(url, bodyData).then(res => res.json())
+      .then(res => {
+      if (res.jwt_token) {
+        
+        let token = res.jwt_token;
+        localStorage.setItem("token", token);
+        localStorage.setItem("isDriver", this.state.isDriver);
+
+        this.context.setAuth(true);
+        this.context.setIsDriver(this.state.isDriver);
+        this.context.setToken(token);
+        if(this.state.isDriver){history.push('/driver')}else {history.push('/shipper')}
+      } else {
+        console.log("wrong email or password");
+      }
+    }).catch(e=>{console.log(e.message);})
   }
 
   render() {
@@ -72,18 +67,19 @@ export class Login extends React.Component {
               <div className="card-content ">
                 <h3 className="login">Login</h3>
 
-                <Switch onChange={this.handleSwitch}/>
+                <Switch onChange={this.handleSwitch} />
 
-                <EmailInput email={this.state.email} onChange={this.handleChangeEmail}/>
-                <PasswordInput email={this.state.password} onChange={this.handleChangePassword}/>
-
-
+                <EmailInput
+                  email={this.state.email}
+                  onChange={this.handleChangeEmail}
+                />
+                <PasswordInput
+                  email={this.state.password}
+                  onChange={this.handleChangePassword}
+                />
               </div>
               <div className="card-action">
-
                 <Button btnName="Log In" />
-
-
               </div>
             </div>
           </div>
@@ -92,6 +88,16 @@ export class Login extends React.Component {
     );
   }
 }
+export default withRouter(LoginPage);
+
+// export function LoginPage(){
+//   const isAuthentficated = useContext(UserContext)
+//   console.log(isAuthentficated)
+// return(
+//   <Login />
+// )
+
+// }
 
 // function Button(props) {
 //   return (
@@ -99,7 +105,7 @@ export class Login extends React.Component {
 //       className="btn waves-effect waves-light"
 //      type="submit"
 //       name="action"
-    
+
 //     >
 //       {props.btnName}
 //     </button>

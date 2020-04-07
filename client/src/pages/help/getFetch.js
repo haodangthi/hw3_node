@@ -1,17 +1,8 @@
-const getFetch=(url)=> {
-  return new Promise((resolve, reject) => {
-    fetch(url)
-      .then(res => res.json())
-      .then(res => {
-        resolve(res);
-      }) //
-      .catch(e => {
-        console.log(e);
-        reject();
-      });
-  });
-}
+const getFetch = url => {
+  return fetch(url).then(res => res.json())
+    
+};
 
 module.exports = {
-  getFetch:getFetch
+  getFetch: getFetch
 };

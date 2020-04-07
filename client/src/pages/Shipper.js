@@ -2,7 +2,7 @@ import React, { Component, useState, useEffect } from "react";
 import {ProfileTitle } from "../components/Form";
 import {Button} from "../components/Button"
 import { useContext } from "react";
-import { UserContext } from "../hooks/UserContext";
+import UserContext  from "../hooks/UserContext";
 
 import { Load } from "./Loads";
 import { ChangePasswordForm } from "./Shipper/ChangePassword";
@@ -13,7 +13,7 @@ let gf = require("./help/getFetch");
 let cl=require('./Shipper/creatLoad')
 
 export function ShipperPage() {
-  let token = useContext(UserContext);
+  let token = useContext(UserContext).token;
   const [currentPassword, setCurrPass] = useState("");
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
@@ -25,9 +25,20 @@ export function ShipperPage() {
   const [shownLoads, setShownLoads] = useState(false);
 
   useEffect(() => {
-    getUserInfo(token).then(res => {
+    getUserInfo(token)
+
+    .then(res => {
       setUser(res.user);
-    });
+      console.log(res)
+    })
+
+    .catch(e => {
+      console.log(e);
+    })
+
+
+
+
   }, []);
 
   useEffect(() => {
