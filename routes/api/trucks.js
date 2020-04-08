@@ -56,6 +56,7 @@ router.put("/api/trucks/:truckId", (req, res) => {
     status: req.body.status,
   }).then((user) => res.json({ status: "ok", user }));
 });
+
 router.put("/api/trucks/assign/:truckId", (req, res) => {
   Truck.findByIdAndUpdate(req.params.truckId, {
     assigned_to: req.body.assigned_to,

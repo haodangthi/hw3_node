@@ -5,9 +5,10 @@ import { handleChangePassword } from "../components/handlers/handleChangePasswor
 import { handleSwitch } from "../components/handlers/handleSwitch";
 import { Button } from "../components/Button";
 import { Switch } from "../components/Switch";
+import { withRouter } from "react-router-dom";
 let pf = require("./help/postFetch");
 
-export class SignUp extends React.Component {
+ class SignUp extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -40,6 +41,7 @@ export class SignUp extends React.Component {
   }
   handleSubmit(e) {
     e.preventDefault();
+    const history = this.props.history;
     let url = "http://localhost:8081/api/users";
     let bodyData = {
       isDriver: this.state.isDriver,
@@ -48,25 +50,11 @@ export class SignUp extends React.Component {
       email: this.state.email,
       password: this.state.password,
     };
-    pf.postFetch(url, bodyData);
+    pf.postFetch(url, bodyData).then(res=>res.json()).then(res=>{
+      console.log(res)
+      history.push("/login");
+    }).catch(e=>console.log(e))
 
-    // fetch("http://localhost:8081/api/users", {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json;charset=utf-8"
-    //     },
-    //     body: JSON.stringify({
-    //       isDriver: this.state.isDriver,
-    //       name: this.state.name,
-    //       surname: this.state.surname,
-    //       email: this.state.email,
-    //       password: this.state.password
-    //     })
-    //   })
-    //     .then(res => res.json())
-    //     .then(res => {
-    //       console.log(res)
-    //     }).catch(e=>{console.log(e.message)});
   }
 
   render() {
@@ -143,3 +131,5 @@ function SurnameInput(props) {
     </div>
   );
 }
+
+export default withRouter(SignUp);

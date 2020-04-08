@@ -4,10 +4,10 @@ import { useContext } from "react";
 import UserContext from "../hooks/UserContext"
 
 export function Navbar() {
-  let isAuthentficated = useContext(UserContext).isAuthentficated;
-  let setAuth=useContext(UserContext).setAuth;
-  let isDriver=useContext(UserContext).isDriver;
-  let logout=()=>{
+  const isAuthentficated = useContext(UserContext).isAuthentficated;
+  const setAuth=useContext(UserContext).setAuth;
+  const isDriver=useContext(UserContext).isDriver;
+  const logout=()=>{
     console.log("log out")
      localStorage.setItem("token","")
      localStorage.setItem("isDriver","")

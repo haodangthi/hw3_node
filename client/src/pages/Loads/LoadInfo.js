@@ -1,7 +1,9 @@
-import React  from "react";
+import React, {useContext} from "react";
 import { Button } from "../../components/Button";
 import {Dimension} from "../Truck/Dimension"
+import UserContext from "../../hooks/UserContext";
 export function LoadInfo(props) {
+  const isDriver=useContext(UserContext).isDriver;
     return (
       <div className="card-content">
         <div className="load-info">
@@ -10,11 +12,11 @@ export function LoadInfo(props) {
           <Info infoTitle="Payload:" infoDetail={props.info.payload} />
           <Info infoTitle="Date of creation:" infoDetail={props.info.date} />
           <Dimension infoTitle="Dimension:" infoDetail={props.info.dimension} />
-          <Button
+          {isDriver?"":<Button
             btnName="Post"
             onClick={props.onClick.post}
-          />
-          <Button btnName="Delete the load" onClick={props.onClick.delete} />
+          />}
+            {isDriver?"":<Button btnName="Delete the load" onClick={props.onClick.delete} />}
         </div>
       </div>
     );

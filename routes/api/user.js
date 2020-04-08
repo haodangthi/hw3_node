@@ -4,13 +4,13 @@ const Driver = require("../../models/driver");
 const Shipper = require("../../models/shipper");
 
 const router = express.Router();
-let h = require("./helpers");
+const h = require("./helpers");
 
 router.get("/api/users/:token", (req, res) => {
-  let isDriver = h.userIsDriver(req.params.token);
-  let userType = h.defineType(isDriver);
+  const isDriver = h.userIsDriver(req.params.token);
+  const userType = h.defineType(isDriver);
 
-  let userID = h.getUserID(req.params.token);
+  const userID = h.getUserID(req.params.token);
   userType
     .findById(userID)
     .then((user) => res.json({ user }))
@@ -18,27 +18,13 @@ router.get("/api/users/:token", (req, res) => {
 });
 
 router.post("/api/users", (req, res) => {
-  if (req.body.isDriver) {
-    console.log("creating a driver");
-    console.log(req.body.isDriver);
-    const driver = createDriver(
-      req.body.name,
-      req.body.surname,
-      req.body.email,
-      req.body.password
-    );
-    saveUserToDB(driver, res);
-  } else {
-    console.log("creating a shipper");
-    console.log(req.body.isDriver);
-    const shipper = createShipper(
-      req.body.name,
-      req.body.surname,
-      req.body.email,
-      req.body.password
-    );
-    saveUserToDB(shipper, res);
-  }
+  const userType = h.defineType(req.body.isDriver);
+  return findByEmail(userType,req.body.email).then(user=>{
+    if (!user){createUser(req,res)} else{
+      console.log("There is a user with the same email")
+      throw new Error()
+    }
+  })
 });
 
 router.put("/api/users/:driverId", (req, res) => {
@@ -51,9 +37,9 @@ router.put("/api/users/:driverId", (req, res) => {
 });
 
 router.put("/api/users/pass/:token", (req, res) => {
-  let isDriver = h.userIsDriver(req.params.token);
-  let userType = h.defineType(isDriver);
-  let userID = h.getUserID(req.params.token);
+  const isDriver = h.userIsDriver(req.params.token);
+  const userType = h.defineType(isDriver);
+  const userID = h.getUserID(req.params.token);
   userType
     .findByIdAndUpdate(userID, {
       password: req.body.password,
@@ -102,6 +88,44 @@ function saveUserToDB(user, res) {
     .catch((e) => {
       res.status(500).json({ status: e.message });
     });
+}
+
+function findUser(userType, email) {
+  return userType.findOne({ email: email });
+}
+
+function createUser(req,res){
+  if (req.body.isDriver) {
+    console.log("creating a driver");
+    
+    const driver = createDriver(
+      req.body.name,
+      req.body.surname,
+      req.body.email,
+      req.body.password
+    );
+    saveUserToDB(driver, res);
+  } else {
+    console.log("creating a shipper");
+    
+    const shipper = createShipper(
+      req.body.name,
+      req.body.surname,
+      req.body.email,
+      req.body.password
+    );
+    saveUserToDB(shipper, res);
+  }
+
+}
+
+function findByEmail(userType,email){
+  return userType.findOne({email:email}).then(res=>
+    res
+ ).catch(e => {
+   console.log("User is not found");
+   res.status(401).json();
+ });
 }
 
 module.exports = router;

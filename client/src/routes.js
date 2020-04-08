@@ -2,7 +2,7 @@ import React, {useContext } from "react";
 import { Switch, Route, Redirect } from "react-router-dom";
 import { DriverPage } from "./pages/User";
 import LoginPage from "./pages/Login";
-import { SignUp } from "./pages/Registration";
+import  SignUp  from "./pages/Registration";
 
 import { ShipperPage } from "./pages/Shipper";
 import UserContext from "./hooks/UserContext";

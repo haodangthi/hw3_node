@@ -31,7 +31,7 @@ class LoginPage extends React.Component {
   handleSubmit(e) {
     e.preventDefault();
     const history = this.props.history;
-    const url = "http://localhost:8081/api/login";
+    const url = "http://localhost:8081/api/auth/login";
     const bodyData = {
       isDriver: this.state.isDriver,
       email: this.state.email,

@@ -6,6 +6,7 @@ const dl = require("./Loads/deleteLoad");
 const help = require("./help/getFetch");
 
 export function Load(props) {
+  
   const [id, setId] = useState(props.loadData._id);
   const [loadState, setLoadState] = useState(props.loadData.state);
   const [status, setStatus] = useState(props.loadData.status);
